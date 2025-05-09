@@ -11,12 +11,13 @@ const container = document.querySelector(".container");
 const totalSpacePX = 360;
 
 // Every pixel will have a light border that will be visible so the user can
-// see the pixels - NOTE This MUST be in multiples of 0.5
+// see the pixels - NOTE This MUST be in multiples of 0.5, I think it has
+// something to do with how I'm adding it to the grid's full size
 const pixelBorderSizePX = 0.5;
 
 // How many pixels the canvas grid should be
-let gridSizeX = 32;
-let gridSizeY = 32;
+let gridSizeX = 16;
+let gridSizeY = gridSizeX;
 let gridFullSize = totalSpacePX + (pixelBorderSizePX * gridSizeX * 2);
 
 // How many screen pixels each canvas pixel should be
@@ -42,3 +43,14 @@ for (let x = 0; x < gridSizeX; x++) {
     container.appendChild(pixel);
   }
 }
+
+// Add event listeners for paint events after the canvas has been populated
+const pixels = document.querySelectorAll(".pixel");
+console.log(pixels);
+pixels.forEach((pixel) => {
+    pixel.addEventListener("mouseenter", () => {
+      pixel.style.backgroundColor = "black";
+      pixel.style.borderColor = "black";
+      console.log("painted pixel");
+  }, true)
+});
