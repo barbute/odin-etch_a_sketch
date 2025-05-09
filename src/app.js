@@ -7,19 +7,21 @@
 
 const container = document.querySelector(".container");
 
+// The total amount of space the container can take up with pixels
+const totalSpacePX = 360;
+
 // Every pixel will have a light border that will be visible so the user can
 // see the pixels - NOTE This MUST be in multiples of 0.5
 const pixelBorderSizePX = 0.5;
 
 // How many pixels the canvas grid should be
-const gridSizeX = 16;
-const gridSizeY = 16;
-const gridFullSize = 
-  (gridSizeX + pixelBorderSizePX) * (gridSizeX + pixelBorderSizePX);
+let gridSizeX = 32;
+let gridSizeY = 32;
+let gridFullSize = totalSpacePX + (pixelBorderSizePX * gridSizeX * 2);
 
 // How many screen pixels each canvas pixel should be
-const pixelSizeXPX = 16;
-const pixelSizeYPX = 16;
+const pixelSizeXPX = totalSpacePX / gridSizeX;
+const pixelSizeYPX = totalSpacePX / gridSizeY;
 
 // Adding styles to constrain the number of grid squares
 container.style.display = "flex";
