@@ -48,9 +48,14 @@ for (let x = 0; x < gridSizeX; x++) {
 const pixels = document.querySelectorAll(".pixel");
 console.log(pixels);
 pixels.forEach((pixel) => {
-    pixel.addEventListener("mouseenter", () => {
+  pixel.addEventListener("mouseover", (event) => {
+    if (event.buttons === 1) {
       pixel.style.backgroundColor = "black";
       pixel.style.borderColor = "black";
-      console.log("painted pixel");
-  }, true)
+    }
+  }, true);
+  pixel.addEventListener("mousedown", (event) => {
+    pixel.style.backgroundColor = "black";
+    pixel.style.borderColor = "black";
+  })
 });
