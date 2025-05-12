@@ -24,6 +24,7 @@ const totalSpacePX = 360;
 const pixelBorderSizePX = 0.5;
 
 let selectedTool = Tool.DRAW;
+let selectedColor = "#000000";
 
 function paintGrid(canvasSizeX, canvasSizeY) {
   // Adding styles to constrain the number of grid squares
@@ -61,8 +62,8 @@ function paintGrid(canvasSizeX, canvasSizeY) {
       // that pixel's opacity level
       switch (selectedTool) {
         case Tool.DRAW:
-          pixel.style.backgroundColor = "black";
-          pixel.style.borderColor = "black";
+          pixel.style.backgroundColor = selectedColor;
+          pixel.style.borderColor = selectedColor;
           pixel.style.opacity = 1.0;
           break;
         case Tool.ERASER:
@@ -127,6 +128,14 @@ sizeSlider.oninput = function() {
   paintGrid(gridSize, gridSize)
 }
 
+// Set the DRAW tool's color to what's picked in the color picker input
+const colorPicker = document.querySelector("#colorpicker");
+colorPicker.oninput = function() {
+  let color = colorPicker.value;
+  selectedColor = color;
+}
+
+// Logic to highlight the button that represents the currently selected tool
 function updateSelectedToolHighlight() {
   // Reset backgroun colors
   const buttons = document.querySelectorAll("button");

@@ -26,6 +26,10 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.container {
+  border: 1.0px #d4d4d4 solid;
+}
+
 button {
   display: inline-flex;
 
