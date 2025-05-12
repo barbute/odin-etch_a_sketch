@@ -7,7 +7,7 @@
 
 const Tool = {
   DRAW: "draw",
-  ERASE: "erase",
+  ERASER: "erase",
   RAINBOW: "rainbow"
 }
 
@@ -20,6 +20,8 @@ const totalSpacePX = 360;
 // see the pixels - NOTE This MUST be in multiples of 0.5, I think it has
 // something to do with how I'm adding it to the grid's full size
 const pixelBorderSizePX = 0.5;
+
+let selectedTool = Tool.DRAW;
 
 function paintGrid(canvasSizeX, canvasSizeY) {
   // Adding styles to constrain the number of grid squares
@@ -35,7 +37,7 @@ function paintGrid(canvasSizeX, canvasSizeY) {
   for (let x = 0; x < canvasSizeX; x++) {
     for (let y = 0; y < canvasSizeY; y++) {
       const pixel = document.createElement("div");
-      // Assign pixel class so we can apply a style to all pixels on the canvas.
+      // Assign pixel class so we can apply a style to all pixels on the canvas
       pixel.setAttribute("class", "pixel");
 
       pixel.style.flexBasis = `${pixelSizeXPX}px`;
@@ -55,10 +57,30 @@ function paintGrid(canvasSizeX, canvasSizeY) {
         pixel.style.borderColor = "black";
       }
     }, true);
-    pixel.addEventListener("mousedown", (event) => {
-      pixel.style.backgroundColor = "black";
-      pixel.style.borderColor = "black";
-    })
+    pixel.addEventListener("mouseover", function(event) {
+      if (event.buttons === 1) {
+        switch (selectedTool) {
+          case Tool.DRAW:
+            pixel.style.backgroundColor = "black";
+            pixel.style.borderColor = "black";
+            break;
+          case Tool.ERASER:
+            pixel.style.backgroundColor = "white";
+            pixel.style.borderColor = "#d4d4d4";
+            break;
+          case Tool.RAINBOW:
+            let red = (Math.random() * 255).toFixed(0);
+            let green = (Math.random() * 255).toFixed(0);
+            let blue = (Math.random() * 255).toFixed(0);
+            pixel.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
+            pixel.style.borderColor = `rgb(${red}, ${green}, ${blue})`;
+            break;
+          default:
+            console.log("ERROR: Invalid tool selected")
+            break;
+        }
+      }
+    }, true);
   });
 }
 
@@ -83,3 +105,33 @@ sizeSlider.oninput = function() {
   // Update and repaint the grid
   paintGrid(gridSize, gridSize)
 }
+
+// Menu bar button logic
+const drawButton = document.querySelector(".draw");
+drawButton.addEventListener("click", function() {
+  selectedTool = Tool.DRAW;
+})
+
+const eraserButton = document.querySelector(".eraser");
+eraserButton.addEventListener("click", function() {
+  selectedTool = Tool.ERASER;
+})
+
+const rainbowButton = document.querySelector(".rainbow");
+rainbowButton.addEventListener("click", function() {
+  selectedTool = Tool.RAINBOW;
+})
+
+const clearButton = document.querySelector(".clear");
+clearButton.addEventListener("click", function() {
+  let currentGridSize = sizeSlider.value;
+
+  // Clear the container
+  const pixels = document.querySelectorAll(".pixel");
+  pixels.forEach((pixel) => {
+    container.removeChild(pixel);
+  });
+
+  // Update and repaint the grid
+  paintGrid(currentGridSize, currentGridSize)
+})
