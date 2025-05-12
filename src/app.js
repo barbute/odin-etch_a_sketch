@@ -5,6 +5,12 @@
  * See the LICENSE file in the root of the project for more information.
  */
 
+const Tool = {
+  DRAW: "draw",
+  ERASE: "erase",
+  RAINBOW: "rainbow"
+}
+
 const container = document.querySelector(".container");
 
 // The total amount of space the container can take up with pixels
@@ -15,47 +21,65 @@ const totalSpacePX = 360;
 // something to do with how I'm adding it to the grid's full size
 const pixelBorderSizePX = 0.5;
 
-// How many pixels the canvas grid should be
-let gridSizeX = 16;
-let gridSizeY = gridSizeX;
-let gridFullSize = totalSpacePX + (pixelBorderSizePX * gridSizeX * 2);
+function paintGrid(canvasSizeX, canvasSizeY) {
+  // Adding styles to constrain the number of grid squares
+  container.style.display = "flex";
+  container.style.flexWrap = "wrap";
+  container.style.flexBasis = `${totalSpacePX}px`;
 
-// How many screen pixels each canvas pixel should be
-const pixelSizeXPX = totalSpacePX / gridSizeX;
-const pixelSizeYPX = totalSpacePX / gridSizeY;
+  // How many screen pixels each canvas pixel should be
+  const pixelSizeXPX = (totalSpacePX / canvasSizeX) - (pixelBorderSizePX * 2);
+  const pixelSizeYPX = (totalSpacePX / canvasSizeY) - (pixelBorderSizePX * 2);
 
-// Adding styles to constrain the number of grid squares
-container.style.display = "flex";
-container.style.flexWrap = "wrap";
-container.style.flexBasis = `${gridFullSize}px`;
+  // Generate grid
+  for (let x = 0; x < canvasSizeX; x++) {
+    for (let y = 0; y < canvasSizeY; y++) {
+      const pixel = document.createElement("div");
+      // Assign pixel class so we can apply a style to all pixels on the canvas.
+      pixel.setAttribute("class", "pixel");
 
-// Generate grid
-for (let x = 0; x < gridSizeX; x++) {
-  for (let y = 0; y < gridSizeY; y++) {
-    const pixel = document.createElement("div");
-    // Assign pixel class so we can apply a style to all pixels on the canvas.
-    pixel.setAttribute("class", "pixel");
+      pixel.style.flexBasis = `${pixelSizeXPX}px`;
+      pixel.style.height = `${pixelSizeYPX}px`;
+      pixel.style.border = `${pixelBorderSizePX}px #d4d4d4 dashed`;
 
-    pixel.style.flexBasis = `${pixelSizeXPX}px`;
-    pixel.style.height = `${pixelSizeYPX}px`;
-    pixel.style.border = `${pixelBorderSizePX}px #d4d4d4 dashed`;
-
-    container.appendChild(pixel);
+      container.appendChild(pixel);
+    }
   }
-}
 
-// Add event listeners for paint events after the canvas has been populated
-const pixels = document.querySelectorAll(".pixel");
-console.log(pixels);
-pixels.forEach((pixel) => {
-  pixel.addEventListener("mouseover", (event) => {
-    if (event.buttons === 1) {
+  // Add event listeners for paint events after the canvas has been populated
+  const pixels = document.querySelectorAll(".pixel");
+  pixels.forEach((pixel) => {
+    pixel.addEventListener("mouseover", (event) => {
+      if (event.buttons === 1) {
+        pixel.style.backgroundColor = "black";
+        pixel.style.borderColor = "black";
+      }
+    }, true);
+    pixel.addEventListener("mousedown", (event) => {
       pixel.style.backgroundColor = "black";
       pixel.style.borderColor = "black";
-    }
-  }, true);
-  pixel.addEventListener("mousedown", (event) => {
-    pixel.style.backgroundColor = "black";
-    pixel.style.borderColor = "black";
-  })
-});
+    })
+  });
+}
+
+// Initial grid paint
+paintGrid(16, 16);
+
+// Grid size slider logic
+const sizeSlider = document.querySelector("#size");
+const sizeDimensionDisplay = document.querySelector("#size-count");
+// When the grid slider changes...
+sizeSlider.oninput = function() {
+  // Update label on display
+  const gridSize = sizeSlider.value;
+  sizeDimensionDisplay.innerHTML = gridSize;
+
+  // Clear the container
+  const pixels = document.querySelectorAll(".pixel");
+  pixels.forEach((pixel) => {
+    container.removeChild(pixel);
+  });
+
+  // Update and repaint the grid
+  paintGrid(gridSize, gridSize)
+}

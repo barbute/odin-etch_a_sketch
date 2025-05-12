@@ -14,6 +14,14 @@
     <script src="./app.js" defer></script>
   </head>
   <body>
+    <div class="menu">
+      <button class="draw">🖌️ Draw</button>
+      <button class="eraser">🎈 Eraser</button>
+      <button class="rainbow">🌈 Rainbow</button>
+      <button class="clear">🧼 Clear</button>
+      <label for="size">Grid Size: <span id="size-count">16</span>px</label>
+      <input type="range" id="size" name="size" min="4" max="64" step="2" value="16">
+    </div>
     <div class="container"></div>
   </body>
 </html>
