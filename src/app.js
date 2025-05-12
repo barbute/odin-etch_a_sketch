@@ -84,9 +84,6 @@ function paintGrid(canvasSizeX, canvasSizeY) {
   });
 }
 
-// Initial grid paint
-paintGrid(16, 16);
-
 // Grid size slider logic
 const sizeSlider = document.querySelector("#size");
 const sizeDimensionDisplay = document.querySelector("#size-count");
@@ -106,20 +103,46 @@ sizeSlider.oninput = function() {
   paintGrid(gridSize, gridSize)
 }
 
+function updateSelectedToolHighlight() {
+  // Reset backgroun colors
+  const buttons = document.querySelectorAll("button");
+  buttons.forEach((button) => {
+    button.classList.remove("selected");
+  });
+
+  switch (selectedTool) {
+    case Tool.DRAW:
+      drawButton.classList.add("selected");
+      break;
+    case Tool.ERASER:
+      eraserButton.classList.add("selected");
+      break;
+    case Tool.RAINBOW:
+      rainbowButton.classList.add("selected");
+      break;
+    default:
+      console.log("ERROR: Invalid tool selected")
+      break;
+  }
+}
+
 // Menu bar button logic
 const drawButton = document.querySelector(".draw");
 drawButton.addEventListener("click", function() {
   selectedTool = Tool.DRAW;
+  updateSelectedToolHighlight()
 })
 
 const eraserButton = document.querySelector(".eraser");
 eraserButton.addEventListener("click", function() {
   selectedTool = Tool.ERASER;
+  updateSelectedToolHighlight()
 })
 
 const rainbowButton = document.querySelector(".rainbow");
 rainbowButton.addEventListener("click", function() {
   selectedTool = Tool.RAINBOW;
+  updateSelectedToolHighlight()
 })
 
 const clearButton = document.querySelector(".clear");
@@ -135,3 +158,9 @@ clearButton.addEventListener("click", function() {
   // Update and repaint the grid
   paintGrid(currentGridSize, currentGridSize)
 })
+
+// Initial grid paint
+paintGrid(16, 16);
+
+// Initial update selected tool highlight
+updateSelectedToolHighlight();

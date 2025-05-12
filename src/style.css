@@ -25,3 +25,27 @@ body {
   font-size: larger;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+button {
+  display: inline-flex;
+
+  padding: 9.0px 5.0px;
+
+  text-align: center;
+  text-decoration: none;
+
+  background-color: white;
+  color: black;
+  
+  border: none;
+  border-radius: 8.0px;
+}
+
+button:hover {
+  background-color: lightgray;
+}
+
+button.selected {
+  background-color: gold;
+  font-weight: bold;
+}
