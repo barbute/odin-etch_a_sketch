@@ -8,7 +8,9 @@
 const Tool = {
   DRAW: "draw",
   ERASER: "erase",
-  RAINBOW: "rainbow"
+  RAINBOW: "rainbow",
+  LIGHTEN: "lighten",
+  DARKEN: "darken"
 }
 
 const container = document.querySelector(".container");
@@ -43,6 +45,8 @@ function paintGrid(canvasSizeX, canvasSizeY) {
       pixel.style.flexBasis = `${pixelSizeXPX}px`;
       pixel.style.height = `${pixelSizeYPX}px`;
       pixel.style.border = `${pixelBorderSizePX}px #d4d4d4 dashed`;
+      // Used later to "lighten" or "darken" the pixel
+      pixel.style.opacity = 1.0;
 
       container.appendChild(pixel);
     }
@@ -53,14 +57,18 @@ function paintGrid(canvasSizeX, canvasSizeY) {
   pixels.forEach((pixel) => {
     // Reusable function to handle logic based on what tool is selected
     function handleToolLogic () {
+      // Note that the opacity must be re-applied each time in order to reset
+      // that pixel's opacity level
       switch (selectedTool) {
         case Tool.DRAW:
           pixel.style.backgroundColor = "black";
           pixel.style.borderColor = "black";
+          pixel.style.opacity = 1.0;
           break;
         case Tool.ERASER:
           pixel.style.backgroundColor = "white";
           pixel.style.borderColor = "#d4d4d4";
+          pixel.style.opacity = 1.0;
           break;
         case Tool.RAINBOW:
           let red = (Math.random() * 255).toFixed(0);
@@ -68,6 +76,15 @@ function paintGrid(canvasSizeX, canvasSizeY) {
           let blue = (Math.random() * 255).toFixed(0);
           pixel.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
           pixel.style.borderColor = `rgb(${red}, ${green}, ${blue})`;
+          pixel.style.opacity = 1.0;
+          break;
+        case Tool.LIGHTEN:
+          pixel.style.opacity = Math.max(
+            Math.min(pixel.style.opacity, 1.0), 0.0) - 0.1;
+          break;
+        case Tool.DARKEN:
+          pixel.style.opacity = Math.max(
+            Math.min(pixel.style.opacity, 1.0), 0.0) + 0.1;
           break;
         default:
           console.log("ERROR: Invalid tool selected")
@@ -127,6 +144,12 @@ function updateSelectedToolHighlight() {
     case Tool.RAINBOW:
       rainbowButton.classList.add("selected");
       break;
+    case Tool.LIGHTEN:
+      lightenButton.classList.add("selected");
+      break;
+    case Tool.DARKEN:
+      darkenButton.classList.add("selected");
+      break;
     default:
       console.log("ERROR: Invalid tool selected")
       break;
@@ -150,6 +173,18 @@ const rainbowButton = document.querySelector(".rainbow");
 rainbowButton.addEventListener("click", function() {
   selectedTool = Tool.RAINBOW;
   updateSelectedToolHighlight()
+})
+
+const lightenButton = document.querySelector(".lighten");
+lightenButton.addEventListener("click", function() {
+  selectedTool = Tool.LIGHTEN;
+  updateSelectedToolHighlight();
+})
+
+const darkenButton = document.querySelector(".darken");
+darkenButton.addEventListener("click", function() {
+  selectedTool = Tool.DARKEN;
+  updateSelectedToolHighlight();
 })
 
 const clearButton = document.querySelector(".clear");
