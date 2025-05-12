@@ -51,36 +51,43 @@ function paintGrid(canvasSizeX, canvasSizeY) {
   // Add event listeners for paint events after the canvas has been populated
   const pixels = document.querySelectorAll(".pixel");
   pixels.forEach((pixel) => {
-    pixel.addEventListener("mouseover", (event) => {
-      if (event.buttons === 1) {
-        pixel.style.backgroundColor = "black";
-        pixel.style.borderColor = "black";
+    // Reusable function to handle logic based on what tool is selected
+    function handleToolLogic () {
+      switch (selectedTool) {
+        case Tool.DRAW:
+          pixel.style.backgroundColor = "black";
+          pixel.style.borderColor = "black";
+          break;
+        case Tool.ERASER:
+          pixel.style.backgroundColor = "white";
+          pixel.style.borderColor = "#d4d4d4";
+          break;
+        case Tool.RAINBOW:
+          let red = (Math.random() * 255).toFixed(0);
+          let green = (Math.random() * 255).toFixed(0);
+          let blue = (Math.random() * 255).toFixed(0);
+          pixel.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
+          pixel.style.borderColor = `rgb(${red}, ${green}, ${blue})`;
+          break;
+        default:
+          console.log("ERROR: Invalid tool selected")
+          break;
       }
-    }, true);
+    }
+
+    // These two events are needed to handle when the mouse is hovering over
+    // an element and when the mouse just clicks on a pixel. This way the
+    // pixel is modified in both cases.
+    // While holding mouse down...
     pixel.addEventListener("mouseover", function(event) {
       if (event.buttons === 1) {
-        switch (selectedTool) {
-          case Tool.DRAW:
-            pixel.style.backgroundColor = "black";
-            pixel.style.borderColor = "black";
-            break;
-          case Tool.ERASER:
-            pixel.style.backgroundColor = "white";
-            pixel.style.borderColor = "#d4d4d4";
-            break;
-          case Tool.RAINBOW:
-            let red = (Math.random() * 255).toFixed(0);
-            let green = (Math.random() * 255).toFixed(0);
-            let blue = (Math.random() * 255).toFixed(0);
-            pixel.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
-            pixel.style.borderColor = `rgb(${red}, ${green}, ${blue})`;
-            break;
-          default:
-            console.log("ERROR: Invalid tool selected")
-            break;
-        }
+        handleToolLogic();
       }
     }, true);
+    // When mouse is clicked...
+    pixel.addEventListener("mousedown", function() {
+      handleToolLogic();
+    })
   });
 }
 
