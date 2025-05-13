@@ -18,10 +18,9 @@ const container = document.querySelector(".container");
 // The total amount of space the container can take up with pixels
 const totalSpacePX = 360;
 
-// Every pixel will have a light border that will be visible so the user can
-// see the pixels - NOTE This MUST be in multiples of 0.5, I think it has
-// something to do with how I'm adding it to the grid's full size
-const pixelBorderSizePX = 0.5;
+// Set border size to 0 px - Windows doesn't display the border sizes as
+// intended (avg Windows L) so just gonna remove for now
+pixelBorderSizePX = 0.0;
 
 let selectedTool = Tool.DRAW;
 let selectedColor = "#000000";
